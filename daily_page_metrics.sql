@@ -12,7 +12,7 @@ gsc_daily AS (
   SELECT
     data_date AS date_ymd,
     REGEXP_EXTRACT(url, r'^https?://([^/]+)') AS host_name,
-    REGEXP_REPLACE(url, r'^https?://[^/]+', '') AS page_path,
+    REGEXP_REPLACE(REGEXP_REPLACE(url, r'^https?://[^/]+', ''), r'#.*$', '') AS page_path,
     SUM(impressions) AS impressions,
     SUM(clicks) AS clicks,
     SUM(sum_position) AS sum_position
