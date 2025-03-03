@@ -15,7 +15,7 @@ category_summary AS (
     SUM(impressions) AS impressions,
     SUM(clicks) AS clicks,
     CASE
-      WHEN SUM(impressions) > 0 THEN ROUND(100.0 * SUM(clicks) / SUM(impressions), 2)
+      WHEN SUM(impressions) > 0 THEN ROUND(SUM(clicks) / SUM(impressions), 4)
       ELSE 0
     END AS ctr_percent,
     
@@ -39,13 +39,13 @@ category_summary AS (
     
     -- コンバージョン率
     CASE
-      WHEN SUM(sessions) > 0 THEN ROUND(100.0 * SUM(purchase_count) / SUM(sessions), 2)
+      WHEN SUM(sessions) > 0 THEN ROUND(SUM(purchase_count) / SUM(sessions), 4)
       ELSE 0
     END AS cvr_percent,
     
     -- 新規ユーザー率
     CASE
-      WHEN SUM(active_users) > 0 THEN ROUND(100.0 * SUM(new_users) / SUM(active_users), 2)
+      WHEN SUM(active_users) > 0 THEN ROUND(SUM(new_users) / SUM(active_users), 4)
       ELSE 0
     END AS new_user_percent,
     
@@ -135,7 +135,7 @@ SELECT
   purchase_count,
   cvr_percent,
   CASE
-    WHEN active_users > 0 THEN ROUND(100.0 * new_users / active_users, 2)
+    WHEN active_users > 0 THEN ROUND(new_users / active_users, 4)
     ELSE 0
   END AS new_user_percent,
   session_rank,

@@ -18,9 +18,8 @@ gsc_daily AS (
     SUM(sum_position) AS sum_position
   FROM `mingla-analytics.searchconsole.searchdata_url_impression`
   WHERE
-    data_date BETWEEN '2025-01-01' AND CURRENT_DATE()
-    -- 必要に応じてホスト名を指定
-    AND REGEXP_EXTRACT(url, r'^https?://([^/]+)') = 'mingla.jp'
+    -- ホスト名の指定のみ残し、日付の制限を削除
+    REGEXP_EXTRACT(url, r'^https?://([^/]+)') = 'mingla.jp'
   GROUP BY
     1, 2, 3
 ),
@@ -56,7 +55,7 @@ SELECT
   COALESCE(g.impressions, 0) AS impressions,
   COALESCE(g.clicks, 0) AS clicks,
   CASE
-    WHEN COALESCE(g.impressions, 0) > 0 THEN ROUND(100.0 * g.clicks / g.impressions, 2)
+    WHEN COALESCE(g.impressions, 0) > 0 THEN ROUND(g.clicks / g.impressions, 4)
     ELSE 0
   END AS ctr_percent,
   CASE
@@ -78,7 +77,7 @@ SELECT
   END AS avg_engagement_sec,
   
   CASE
-    WHEN COALESCE(a.sessions, 0) > 0 THEN ROUND(a.purchase_count * 100.0 / a.sessions, 2)
+    WHEN COALESCE(a.sessions, 0) > 0 THEN ROUND(a.purchase_count / a.sessions, 4)
     ELSE 0
   END AS cvr_percent,
   
